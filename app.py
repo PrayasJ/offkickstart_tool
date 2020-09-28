@@ -2,6 +2,7 @@ from firebase import firebase
 import sys
 import datetime
 import csv
+from google.colab import files
 
 firebase = firebase.FirebaseApplication('https://offkicksinc.firebaseio.com', None)
 
@@ -88,9 +89,11 @@ if sys.argv[1] == '-add_product':
 
 if sys.argv[1] == '-list':
     data_file = ''
+    fname = ''
     data = []
     if sys.argv[2] == 'products':
         data_file = open('product_list.csv', 'w', newline = '')
+        fname = 'product_list.csv'
         temp = firebase.get('/Products', '')
         data.append(['ID','Size','Price','Cost','Points'])
         for key,value in temp.items():
@@ -99,6 +102,7 @@ if sys.argv[1] == '-list':
     if sys.argv[2] == 'users':
         data_file = open('user_list.csv', 'w', newline = '')
         temp = firebase.get('/', '')
+        fname = 'user_list.csv'
         data.append(['ID','Name','Location','Contact','Email','Points'])
         temp.pop('Products','None')
         for key,value in temp.items():
@@ -106,6 +110,7 @@ if sys.argv[1] == '-list':
     if sys.argv[2] == 'purchases':
         _id = sys.argv[3]
         data_file = open(_id+'_list.csv', 'w', newline = '')
+        fname = _id+'_list.csv'
         temp = firebase.get('/'+_id+'/purchases', '')
         data.append(['Purchase ID', 'Name', 'Size', 'Quantity', 'Amount', 'Date'])
         for key, value in temp.items():
@@ -114,4 +119,5 @@ if sys.argv[1] == '-list':
     csv_writer = csv.writer(data_file) 
     for l in data:
         csv_writer.writerow(l)
+    files.download(fname)
     data_file.close()
