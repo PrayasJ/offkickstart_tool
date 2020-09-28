@@ -119,5 +119,5 @@ if sys.argv[1] == '-list':
     csv_writer = csv.writer(data_file) 
     for l in data:
         csv_writer.writerow(l)
-    files.download(fname)
     data_file.close()
+    files.download(fname)
