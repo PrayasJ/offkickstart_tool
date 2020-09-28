@@ -2,7 +2,6 @@ from firebase import firebase
 import sys
 import datetime
 import csv
-from google.colab import files
 
 firebase = firebase.FirebaseApplication('https://offkicksinc.firebaseio.com', None)
 
@@ -120,4 +119,3 @@ if sys.argv[1] == '-list':
     for l in data:
         csv_writer.writerow(l)
     data_file.close()
-    files.download(fname)
