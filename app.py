@@ -3,6 +3,7 @@ import sys
 import datetime
 import csv
 from google.colab import files
+import pandas as pd
 
 firebase = firebase.FirebaseApplication('https://offkicksinc.firebaseio.com', None)
 
@@ -92,7 +93,7 @@ if sys.argv[1] == '-list':
     fname = ''
     data = []
     if sys.argv[2] == 'products':
-        data_file = open('product_list.csv', 'w', newline = '')
+        #data_file = open('product_list.csv', 'w', newline = '')
         fname = 'product_list.csv'
         temp = firebase.get('/Products', '')
         data.append(['ID','Size','Price','Cost','Points'])
@@ -100,7 +101,7 @@ if sys.argv[1] == '-list':
             for key2,values2 in value.items():
                 data.append([key, key2, values2['Price'], values2['Cost'], values2['Points']])
     if sys.argv[2] == 'users':
-        data_file = open('user_list.csv', 'w', newline = '')
+        #data_file = open('user_list.csv', 'w', newline = '')
         temp = firebase.get('/', '')
         fname = 'user_list.csv'
         data.append(['ID','Name','Location','Contact','Email','Points'])
@@ -109,15 +110,17 @@ if sys.argv[1] == '-list':
             data.append([key, value['Name'], value['Location'], value['Contact'], value['Email'], value['Total_points']])
     if sys.argv[2] == 'purchases':
         _id = sys.argv[3]
-        data_file = open(_id+'_list.csv', 'w', newline = '')
+        #data_file = open(_id+'_list.csv', 'w', newline = '')
         fname = _id+'_list.csv'
         temp = firebase.get('/'+_id+'/purchases', '')
         data.append(['Purchase ID', 'Name', 'Size', 'Quantity', 'Amount', 'Date'])
         for key, value in temp.items():
             data.append([key, value['Name'], value['Size'], value['Quantity'], value['Amount'], value['DOP']])
 
-    csv_writer = csv.writer(data_file) 
-    for l in data:
-        csv_writer.writerow(l)
-    data_file.close()
+    #csv_writer = csv.writer(data_file) 
+    #for l in data:
+    #    csv_writer.writerow(l)
+    #data_file.close()
+    df = pd.DataFrame(data)
+    df.to_csv(fname)
     files.download(fname)
